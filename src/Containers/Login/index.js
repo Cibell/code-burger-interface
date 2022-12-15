@@ -1,37 +1,58 @@
 import React from 'react'
+import { useForm } from 'react-hook-form'
 
-import LoginImg from '../../assets/login-imag.svg'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+
+import LoginImage from '../../assets/login-imag.svg'
 import Logo from '../../assets/logo.svg'
-import {
-  Container,
-  LoginImage,
-  ContainerItem,
-  Label,
-  Input,
-  Button,
-  SignInLink
-} from './styles'
+import api from '../../services/api'
+import Button from './../../components/Button'
+import { Container, ContainerItem, Label, Error, Input, Link } from './styles'
 
-function Login () {
+const Login = () => {
+  const schema = yup.object().shape({
+    email: yup.string().email('Digite um e-mail válido').required('O e-mail é obrigatório'),
+    password: yup.string().required('Senha é obrigatório').min(6, 'Senha deve ')
+  }).required()
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  })
+  const onSubmit = async clientData => {
+    const response = await api.post('sessions', {
+      email: clientData.email,
+      password: clientData.password
+    })
+    console.log(response)
+  }
+
   return (
-        <Container>
-          <LoginImage src={LoginImg} alt="login-image"/>
-          <ContainerItem>
-            <img src={Logo} alt="logo"/>
-            <h1>Login</h1>
+    <Container>
+      <img src={LoginImage}/>
 
-            <Label>Email</Label>
-            <Input/>
+      <ContainerItem>
+       <img src={Logo}/>
 
-            <Label>Password</Label>
-            <Input/>
+        <h1>Login</h1>
 
-            <Button>Sign In</Button>
-            <SignInLink>Não possui conta? <a>Sign up</a></SignInLink>
+        <form noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Label>Email</Label>
+        <Input type='email' {...register('email')} error={errors.email?.message}/>
+        <Error>{errors.email?.message}</Error>
 
-          </ContainerItem>
+        <Label>Password</Label>
+        <Input type='password' {...register('password')} error={errors.password?.message}/>
+        <Error>{errors.password?.message}</Error>
 
-        </Container>
+        <Button type="submit" style={{ marginTop: 40, marginBottom: 30 }} >Sign In</Button>
+
+        <Link>Não possui conta ? <a>Sign up</a></Link>
+        </form>
+
+      </ContainerItem>
+
+    </Container>
   )
 }
 

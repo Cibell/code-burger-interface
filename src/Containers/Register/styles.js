@@ -18,9 +18,7 @@ justify-content: center;
 align-items: center;
 
 width: 526px;
-height: 635px;
-left: 194px;
-top: 82px;
+height: 664px;
 
 background: #373737;
 box-shadow: 0px 4px 15px rgba(74, 144, 226, 0.24);
@@ -31,12 +29,10 @@ font-style: normal;
 font-weight: 500;
 font-size: 24px;
 line-height: 28px;
+margin-top: 19px;
 
 color: #FFFFFF;
 
-}
-img{
-   margin-bottom: 70px;
 }
 `
 
@@ -45,7 +41,7 @@ font-style: normal;
 font-weight: 500;
 font-size: 12px;
 line-height: 14px;
-margin-top:  ${props => props.error ? '12px' : '28px'};
+margin: 20px 0 3px 0;
 
 color: #FFFFFF;
 `
@@ -64,14 +60,11 @@ display: flex;
 flex-direction: column;
 width: 391.42px;
 height: 38.32px;
-left: 792px;
-top: 414px;
 
 background: #FFFFFF;
 box-shadow: 3px 3px 10px rgba(74, 144, 226, 0.19);
 border-radius: 5px;
 padding-left: 10px;
-margin-top: 3px;
 border: ${props => props.error ? '3px solid #CC1717' : 'none'};
 `
 export const Link = styled.p`
