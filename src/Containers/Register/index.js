@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -11,6 +12,8 @@ import Button from './../../components/Button'
 import { Container, ContainerItem, Label, Error, Input, Link } from './styles'
 
 const Register = () => {
+  const { data, setData } = useState()
+
   const schema = yup.object().shape({
     name: yup.string().required('O nome é obrigatório'),
     email: yup.string().email('Digite um e-mail válido').required('O e-mail é obrigatório'),
@@ -22,12 +25,28 @@ const Register = () => {
     resolver: yupResolver(schema)
   })
   const onSubmit = async clientData => {
-    const response = await api.post('users', {
-      name: clientData.name,
-      email: clientData.email,
-      password: clientData.password
-    })
-    console.log(response)
+    const bela = []
+    bela.push(clientData)
+    setData(bela)
+    try {
+      const { status } = await api.post('users', {
+        name: clientData.name,
+        email: clientData.email,
+        password: clientData.password
+      }, {
+        validateStatus: () => true
+      })
+
+      if (status === 201 || status === 200) {
+        toast.success('Cadastro criado com sucesso!')
+      } else if (status === 409) {
+        toast.error('E-mail já cadastrado! Faça login para continuar')
+      } else {
+        throw new Error()
+      }
+    } catch (err) {
+      toast.error('Falha no sitema! Tente novamente')
+    }
   }
 
   return (
